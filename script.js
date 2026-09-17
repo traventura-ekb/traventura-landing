@@ -294,7 +294,8 @@ async function submitLead() {
   phoneEl.classList.remove('error');
 
   if (!nameEl.value.trim()) { nameEl.classList.add('error'); valid = false; }
-  const phoneDigits = phoneEl.value.replace(/\D/g, ''); if (phoneDigits.length < 11) { phoneEl.classList.add('error'); valid = false; }
+  const phoneDigits = phoneEl.value.replace(/\D/g, '');
+  if (phoneDigits.length < 11) { phoneEl.classList.add('error'); valid = false; }
   if (!consentEl.checked) {
     alert('Пожалуйста, дайте согласие на обработку персональных данных');
     valid = false;
@@ -309,25 +310,48 @@ async function submitLead() {
 
   const leadData = getLeadData(nameEl.value.trim(), phoneEl.value.trim());
 
-  if (CONFIG.TEST_MODE) {
-    console.log('[TEST MODE] Данные заявки:', leadData);
-    await new Promise(r => setTimeout(r, 1200)); // имитация запроса
-    showSuccess();
-    return;
-  }
-
   try {
-    const response = await fetch(CONFIG.LEAD_ENDPOINT, {
+    // Формируем сообщение для Telegram
+    const utm = getUTM();
+    const utmStr = Object.entries(utm).map(([k,v]) => `${k}: ${v}`).join('\n') || '—';
+
+    const msg = [
+      '🌴 *Новая заявка — Травентура*',
+      '',
+      `👤 *Имя:* ${leadData.name}`,
+      `📱 *Телефон:* ${leadData.phone}`,
+      '',
+      `👥 *С кем едет:* ${leadData.q1_company || '—'}`,
+      `✨ *Что важно:* ${leadData.q2_priorities || '—'}`,
+      `🌍 *Направление:* ${leadData.q3_destination || '—'}${leadData.q3_other ? ' (' + leadData.q3_other + ')' : ''}`,
+      `📅 *Когда:* ${leadData.q4_when || '—'}${leadData.q4_date_from ? ' (' + leadData.q4_date_from + ' — ' + leadData.q4_date_to + ')' : ''}`,
+      `💰 *Бюджет:* ${leadData.q5_budget || '—'}`,
+      '',
+      `🎟 *Промокод:* ${leadData.promo}`,
+      '',
+      `📊 UTM: ${utmStr}`,
+      `🔗 ${leadData.page_url}`
+    ].join('\n');
+
+    const TG_TOKEN = '8540014836:AAEyb8g3wkqL-1uf_kxu40aC3PUkK7Uh16A';
+    const TG_CHAT_ID = '365158196';
+
+    const response = await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(leadData)
+      body: JSON.stringify({
+        chat_id: TG_CHAT_ID,
+        text: msg,
+        parse_mode: 'Markdown'
+      })
     });
 
-    if (response.ok) {
+    const result = await response.json();
+    if (result.ok) {
       trackEvent('lead_submit');
       showSuccess();
     } else {
-      throw new Error('Server error ' + response.status);
+      throw new Error('Telegram error: ' + JSON.stringify(result));
     }
   } catch (err) {
     console.error('Submit error:', err);
