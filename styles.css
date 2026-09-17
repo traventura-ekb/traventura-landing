@@ -327,3 +327,63 @@ section { padding: 72px 0; }
   .btn-hero { padding: 18px 32px; font-size: 1rem; width: 100%; }
   .container { padding: 0 16px; }
 }
+
+/* PROMO CODE ROW */
+.promo-code-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+
+.copy-btn {
+  background: white;
+  border: 1.5px solid var(--warm);
+  color: var(--ink);
+  padding: 8px 16px;
+  border-radius: 999px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: var(--font);
+  white-space: nowrap;
+}
+.copy-btn:hover { background: var(--warm); color: white; }
+.copy-btn.copied { background: #4CAF50; border-color: #4CAF50; color: white; }
+
+.copy-btn-full {
+  width: 100%;
+  margin-top: 12px;
+  border-color: var(--sky);
+  text-align: center;
+  justify-content: center;
+  display: block;
+}
+.copy-btn-full:hover { background: var(--sky); color: white; }
+
+/* PREFILL CARD */
+.prefill-card {
+  background: var(--sky-light);
+  border: 1.5px solid var(--sky);
+  border-radius: var(--radius);
+  padding: 20px;
+  margin-bottom: 24px;
+  text-align: left;
+}
+.prefill-label {
+  font-size: 0.8rem;
+  color: var(--ink-soft);
+  font-weight: 600;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.prefill-text {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.5;
+}
