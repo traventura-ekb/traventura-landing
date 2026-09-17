@@ -302,17 +302,32 @@
       <!-- SUCCESS SCREEN -->
       <div class="success-screen" id="success-screen">
         <div class="success-icon">♡</div>
-        <h2>Всё! Теперь мы знаем,<br>какой отдых вам искать.</h2>
-        <p class="success-sub">Ваша заявка принята. Чтобы мы сразу начали подбор — напишите нам в удобном мессенджере.</p>
+        <h2>Отлично! Мы получили<br>ваши пожелания.</h2>
+
         <div class="success-important">
           <h3>📩 ВАЖНО: НАПИШИТЕ НАМ В МЕССЕНДЖЕР</h3>
-          <p>Напишите нам сейчас — и ваш турагент возьмётся за подбор.</p>
+          <p>Напишите нам сейчас — и ваш турагент сразу возьмётся за подбор.</p>
         </div>
+
         <div class="promo-card">
           <div class="promo-label">Ваш промокод</div>
-          <div class="promo-code">ХОЧУВТУР</div>
+          <div class="promo-code-row">
+            <div class="promo-code">ХОЧУВТУР</div>
+            <button class="copy-btn" onclick="copyPromo(this)" title="Скопировать промокод">
+              📋 Скопировать
+            </button>
+          </div>
           <div class="promo-desc">🔥 По промокоду дополнительно проверим закрытые и горящие предложения и лучшие доступные цены на ваши даты.</div>
         </div>
+
+        <div class="prefill-card">
+          <div class="prefill-label">Готовое сообщение — скопируйте и отправьте нам:</div>
+          <div class="prefill-text">«Здравствуйте! Я заполнила свои пожелания и хочу в тур»</div>
+          <button class="copy-btn copy-btn-full" onclick="copyMessage(this)">
+            📋 Скопировать сообщение
+          </button>
+        </div>
+
         <div class="messenger-buttons">
           <a href="#" id="btn-max" class="btn-messenger btn-max" target="_blank" rel="noopener" onclick="trackEvent('max_click')">
             <span class="messenger-icon">💬</span>НАПИСАТЬ В MAX
