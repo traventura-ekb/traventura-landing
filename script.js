@@ -333,8 +333,8 @@ async function submitLead() {
       `🔗 ${leadData.page_url}`
     ].join('\n');
 
-    const TG_TOKEN = '8540014836:AAEyb8g3wkqL-1uf_kxu40aC3PUkK7Uh16A';
-    const TG_CHAT_ID = '365158196';
+    const TG_TOKEN = '8683444888:AAHytido1aEylUqTGS-iqh_fHbxxPNWJzjY';
+    const TG_CHAT_ID = '8091089728';
 
     const response = await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
       method: 'POST',
