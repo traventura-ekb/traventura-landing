@@ -387,3 +387,23 @@ section { padding: 72px 0; }
   color: var(--ink);
   line-height: 1.5;
 }
+
+.prefill-caps {
+  font-weight: 800;
+  color: var(--sky-dark);
+  font-size: 1.05em;
+}
+.prefill-hint {
+  font-size: 0.8rem;
+  color: var(--ink-soft);
+  margin-top: 10px;
+  text-align: center;
+}
+/* убираем promo-code-row если остался */
+.promo-code-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
