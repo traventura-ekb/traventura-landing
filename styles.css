@@ -283,7 +283,7 @@ section { padding: 72px 0; }
 .footer { background: #0F1E2E; color: rgba(255,255,255,0.6); padding: 48px 0 32px; }
 .footer-inner { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 32px; margin-bottom: 40px; }
 .footer-logo { margin-bottom: 12px; }
-.footer-logo img { height: 30px; filter: brightness(10); }
+.footer-logo img { height: 30px; filter: brightness(0) invert(1); }
 .footer-brand-tag { font-size: 0.82rem; color: rgba(255,255,255,0.45); margin-top: 6px; }
 .footer-col h4 { color: rgba(255,255,255,0.85); font-size: 0.875rem; margin-bottom: 14px; }
 .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 8px; }
