@@ -204,6 +204,53 @@ function hideDateFields() {
   answers.dateTo = '';
 }
 
+
+// ---- Копирование промокода ----
+function copyPromo(btn) {
+  navigator.clipboard.writeText('ХОЧУВТУР').then(() => {
+    btn.textContent = '✅ Скопировано!';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = '📋 Скопировать';
+      btn.classList.remove('copied');
+    }, 2000);
+  }).catch(() => {
+    // fallback для старых браузеров
+    const ta = document.createElement('textarea');
+    ta.value = 'ХОЧУВТУР';
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    btn.textContent = '✅ Скопировано!';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = '📋 Скопировать'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+
+// ---- Копирование готового сообщения ----
+function copyMessage(btn) {
+  const msg = 'Здравствуйте! Я заполнила свои пожелания и хочу в тур';
+  navigator.clipboard.writeText(msg).then(() => {
+    btn.textContent = '✅ Сообщение скопировано!';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = '📋 Скопировать сообщение';
+      btn.classList.remove('copied');
+    }, 2500);
+  }).catch(() => {
+    const ta = document.createElement('textarea');
+    ta.value = msg;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    btn.textContent = '✅ Сообщение скопировано!';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = '📋 Скопировать сообщение'; btn.classList.remove('copied'); }, 2500);
+  });
+}
+
 // ---- Сборка ссылок мессенджеров ----
 function buildMessengerLinks() {
   const msg = encodeURIComponent(CONFIG.PREFILL_MESSAGE);
