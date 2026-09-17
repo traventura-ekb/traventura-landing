@@ -230,7 +230,7 @@ function copyPromo(btn) {
 
 // ---- Копирование готового сообщения ----
 function copyMessage(btn) {
-  const msg = 'Здравствуйте! Я заполнила свои пожелания и хочу в тур';
+  const msg = 'Здравствуйте! Я заполнила свои пожелания и ХОЧУ В ТУР!';
   navigator.clipboard.writeText(msg).then(() => {
     btn.textContent = '✅ Сообщение скопировано!';
     btn.classList.add('copied');
