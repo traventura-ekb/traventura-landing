@@ -25,6 +25,52 @@ function getUTM() {
 
 saveUTM();
 
+// ---- Маска телефона ----
+function initPhoneMask() {
+  const input = document.getElementById('lead-phone');
+  if (!input) return;
+
+  input.addEventListener('input', function(e) {
+    let val = input.value.replace(/\D/g, '');
+    // Если начинается с 8 или 7 — заменяем на 7
+    if (val.startsWith('8') || val.startsWith('7')) val = '7' + val.slice(1);
+    if (!val) { input.value = ''; return; }
+    val = '7' + val.slice(1); // принудительно +7
+
+    let result = '+7';
+    if (val.length > 1) result += ' (' + val.slice(1, 4);
+    if (val.length >= 4) result += ') ' + val.slice(4, 7);
+    if (val.length >= 7) result += '-' + val.slice(7, 9);
+    if (val.length >= 9) result += '-' + val.slice(9, 11);
+    input.value = result;
+  });
+
+  input.addEventListener('keydown', function(e) {
+    // Разрешаем вставку через Ctrl+V / Cmd+V
+    if ((e.ctrlKey || e.metaKey) && e.key === 'v') return;
+  });
+
+  input.addEventListener('paste', function(e) {
+    setTimeout(() => {
+      let val = input.value.replace(/\D/g, '');
+      if (val.startsWith('8')) val = '7' + val.slice(1);
+      if (!val.startsWith('7')) val = '7' + val;
+      input.dispatchEvent(new Event('input'));
+    }, 10);
+  });
+
+  input.addEventListener('focus', function() {
+    if (!input.value) input.value = '+7 ';
+  });
+
+  input.addEventListener('blur', function() {
+    if (input.value === '+7 ' || input.value === '+7') input.value = '';
+  });
+}
+
+document.addEventListener('DOMContentLoaded', initPhoneMask);
+
+
 // ---- Яндекс Метрика ----
 function trackEvent(eventName) {
   try {
@@ -201,7 +247,7 @@ async function submitLead() {
   phoneEl.classList.remove('error');
 
   if (!nameEl.value.trim()) { nameEl.classList.add('error'); valid = false; }
-  if (!phoneEl.value.trim() || phoneEl.value.trim().length < 7) { phoneEl.classList.add('error'); valid = false; }
+  const phoneDigits = phoneEl.value.replace(/\D/g, ''); if (phoneDigits.length < 11) { phoneEl.classList.add('error'); valid = false; }
   if (!consentEl.checked) {
     alert('Пожалуйста, дайте согласие на обработку персональных данных');
     valid = false;
