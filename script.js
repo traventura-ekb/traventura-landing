@@ -395,3 +395,15 @@ if (!CONFIG.TEST_MODE) {
 })();
 
 // Яндекс Метрика инициализируется в <head>
+
+// ---- Поддержка якоря #quiz ----
+(function() {
+  function handleHash() {
+    if (window.location.hash === '#quiz') {
+      const el = document.getElementById('quiz-section');
+      if (el) setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+    }
+  }
+  window.addEventListener('load', handleHash);
+  window.addEventListener('hashchange', handleHash);
+})();
