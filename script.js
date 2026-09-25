@@ -333,21 +333,16 @@ async function submitLead() {
       `🔗 ${leadData.page_url}`
     ].join('\n');
 
-    const TG_TOKEN = '8683444888:AAHytido1aEylUqTGS-iqh_fHbxxPNWJzjY';
-    const TG_CHAT_ID = '8091089728';
+    const ENDPOINT = 'https://functions.yandexcloud.net/d4ea7sn5pklm7saavvc8';
 
-    const response = await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
+    const response = await fetch(ENDPOINT, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        chat_id: TG_CHAT_ID,
-        text: msg,
-        parse_mode: 'Markdown'
-      })
+      body: JSON.stringify(leadData)
     });
 
     const result = await response.json();
-    if (result.ok) {
+    if (result.success) {
       trackEvent('lead_submit');
       showSuccess();
     } else {
