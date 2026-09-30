@@ -94,7 +94,10 @@ const answers = {
   q5: null, // бюджет
   otherDirection: '',
   dateFrom: '',
-  dateTo: ''
+  dateTo: '',
+  installment_interest: null, // рассрочка
+  installment_price: null,    // сумма из калькулятора
+  installment_monthly: null   // платёж из калькулятора
 };
 
 // ---- Навигация по квизу ----
@@ -255,6 +258,69 @@ function copyMessage(btn) {
   });
 }
 
+
+// ---- Калькулятор рассрочки ----
+const SHOW_ZERO_OVERPAYMENT = false;
+const TERM_MONTHS = 36;
+let calcTracked = false;
+
+function initInstallmentCalc() {
+  const priceInput = document.getElementById('tourPrice');
+  const monthlyEl = document.getElementById('monthlyPayment');
+  if (!priceInput || !monthlyEl) return;
+
+  function formatRub(val) {
+    return new Intl.NumberFormat('ru-RU').format(val);
+  }
+
+  function calculate() {
+    const price = Math.max(parseInt(priceInput.value) || 0, 0);
+    if (!price) { monthlyEl.textContent = '—'; return; }
+    const monthly = Math.ceil(price / TERM_MONTHS);
+    monthlyEl.textContent = formatRub(monthly) + ' ₽ / месяц';
+    // Сохраняем в answers для передачи в заявку
+    answers.installment_price = price;
+    answers.installment_monthly = monthly;
+  }
+
+  priceInput.addEventListener('input', () => {
+    // Только цифры, не отрицательные
+    if (priceInput.value < 0) priceInput.value = 0;
+    calculate();
+    if (!calcTracked) {
+      calcTracked = true;
+      trackEvent('installment_calc_used');
+    }
+  });
+
+  calculate();
+}
+
+document.addEventListener('DOMContentLoaded', initInstallmentCalc);
+
+// ---- Вопрос рассрочки в квизе ----
+function showInstallmentQuestion() {
+  if (!answers.q5) {
+    alert('Пожалуйста, выберите бюджет');
+    return;
+  }
+  trackEvent('quiz_step_5');
+  document.querySelectorAll('.quiz-step').forEach(s => s.classList.remove('active'));
+  document.getElementById('step-5b').classList.add('active');
+  document.getElementById('quiz-header').style.display = 'none';
+  scrollToQuiz();
+}
+
+function selectInstallment(btn, val) {
+  document.querySelectorAll('[data-q="installment"]').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  answers.installment_interest = val;
+  // Метрика
+  if (val === 'yes') trackEvent('installment_yes');
+  else if (val === 'maybe') trackEvent('installment_maybe');
+  else if (val === 'no') trackEvent('installment_no');
+}
+
 // ---- Сборка ссылок мессенджеров ----
 function buildMessengerLinks() {
   const msg = encodeURIComponent(CONFIG.PREFILL_MESSAGE);
@@ -265,6 +331,12 @@ function buildMessengerLinks() {
 
 // ---- Отправка заявки ----
 function getLeadData(name, phone) {
+  const installmentLabels = {
+    'yes': 'Да, хочет узнать условия',
+    'maybe': 'Возможно, если платёж будет комфортным',
+    'no': 'Планирует оплатить сразу'
+  };
+
   return {
     name: name,
     phone: phone,
@@ -276,6 +348,10 @@ function getLeadData(name, phone) {
     q4_date_from: answers.dateFrom || '',
     q4_date_to: answers.dateTo || '',
     q5_budget: answers.q5,
+    installment_interest: answers.installment_interest || 'не указано',
+    installment_interest_label: installmentLabels[answers.installment_interest] || 'не указано',
+    installment_calculator_price: answers.installment_price || '',
+    installment_calculator_monthly: answers.installment_monthly || '',
     promo: CONFIG.PROMO_CODE,
     timestamp: new Date().toISOString(),
     page_url: window.location.href,
@@ -376,6 +452,11 @@ function showSuccess() {
   document.getElementById('quiz-header').style.display = 'none';
   document.getElementById('success-screen').classList.add('active');
   trackEvent('success_view');
+  // Показываем подсказку про рассрочку
+  if (answers.installment_interest === 'yes' || answers.installment_interest === 'maybe') {
+    const note = document.getElementById('installment-success-note');
+    if (note) note.style.display = 'block';
+  }
   scrollToQuiz();
 }
 
