@@ -164,6 +164,38 @@
   </div>
 </section>
 
+
+<!-- INSTALLMENT BLOCK -->
+<section class="installment-box" id="installment">
+  <div class="container">
+    <div class="installment-inner">
+      <div class="installment-copy">
+        <span class="installment-kicker">Оплата частями</span>
+        <h2>Отдых сейчас.<br>Всю сумму сразу —<br>не обязательно.</h2>
+        <p>Введите стоимость тура — покажем пример платежа на 36 месяцев.</p>
+      </div>
+      <div class="installment-calculator">
+        <label for="tourPrice">Стоимость тура</label>
+        <div class="price-input-wrap">
+          <input id="tourPrice" type="number" inputmode="numeric" value="150000" min="1000" step="1000">
+          <span class="price-currency">₽</span>
+        </div>
+        <div class="payment-result">
+          <span class="payment-label">Примерный платёж</span>
+          <strong id="monthlyPayment">4 167 ₽ / месяц</strong>
+          <span class="payment-term">на 36 месяцев</span>
+        </div>
+        <button type="button" class="installment-cta" id="installmentCta"
+          onclick="trackEvent('installment_cta_click'); scrollToQuiz(); if(!quizStarted){quizStarted=true;trackEvent('quiz_start');}">
+          ПОДОБРАТЬ ТУР С ОПЛАТОЙ ЧАСТЯМИ
+        </button>
+        <p class="installment-note">Расчёт предварительный. Возможность оформления и окончательные условия определяются после одобрения заявки финансовым партнёром.</p>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- /INSTALLMENT BLOCK -->
+
 <!-- QUIZ -->
 <span id="quiz" style="display:block;height:0;visibility:hidden;"></span>
 <section id="quiz-section" style="scroll-margin-top:70px;">
@@ -342,6 +374,30 @@
         </div>
         <div class="quiz-nav">
           <button class="btn-back" onclick="prevStep(4)">← Назад</button>
+          <button class="btn btn-primary" onclick="showInstallmentQuestion()">Далее →</button>
+        </div>
+      </div>
+
+      <!-- STEP 5b: INSTALLMENT -->
+      <div class="quiz-step" id="step-5b">
+        <h3>Хотите рассмотреть оплату частями?</h3>
+        <p class="quiz-hint">Необязательно — но турагент сразу учтёт это при подборе</p>
+        <div class="options-grid single-col">
+          <button class="option-btn" data-q="installment" data-val="yes"
+            onclick="selectInstallment(this, 'yes')">
+            <span class="opt-check">✓</span>Да, хочу узнать условия
+          </button>
+          <button class="option-btn" data-q="installment" data-val="maybe"
+            onclick="selectInstallment(this, 'maybe')">
+            <span class="opt-check">✓</span>Возможно, если платёж будет комфортным
+          </button>
+          <button class="option-btn" data-q="installment" data-val="no"
+            onclick="selectInstallment(this, 'no')">
+            <span class="opt-check">✓</span>Нет, планирую оплатить сразу
+          </button>
+        </div>
+        <div class="quiz-nav">
+          <button class="btn-back" onclick="showStep(5)">← Назад</button>
           <button class="btn btn-primary" onclick="showContactStep()">Далее →</button>
         </div>
       </div>
@@ -415,6 +471,7 @@
           </a>
         </div>
         <p class="success-note">Заявка уже сохранена — даже если вы сейчас закроете страницу, мы её увидим.</p>
+        <p id="installment-success-note" class="success-note" style="display:none;margin-top:8px;">💳 Турагент также расскажет о доступном варианте оплаты частями.</p>
       </div>
 
     </div>
