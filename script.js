@@ -74,11 +74,11 @@ document.addEventListener('DOMContentLoaded', initPhoneMask);
 // ---- Яндекс Метрика ----
 function trackEvent(eventName) {
   try {
-    if (CONFIG.METRIKA_ID && window.ym) {
-      ym(CONFIG.METRIKA_ID, 'reachGoal', eventName);
+    if (window.ym) {
+      ym(113045925, 'reachGoal', eventName);
     }
   } catch(e) {}
-  if (CONFIG.TEST_MODE) console.log('[МЕТРИКА]', eventName);
+  console.log('[МЕТРИКА]', eventName);
 }
 
 // ---- Состояние квиза ----
@@ -98,6 +98,7 @@ const answers = {
 };
 
 // ---- Навигация по квизу ----
+let quizStarted = false;
 function scrollToQuiz() {
   const el = document.getElementById('quiz-section');
   if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -138,7 +139,9 @@ function nextStep(n) {
     alert('Пожалуйста, выберите когда хотите улететь');
     return;
   }
-  trackEvent('quiz_step_' + (n - 1));
+  // Отправляем событие шага который пользователь ЗАВЕРШИЛ
+  var completedStep = n - 1;
+  trackEvent('quiz_step_' + completedStep);
   showStep(n);
   scrollToQuiz();
 }
@@ -154,6 +157,7 @@ function showContactStep() {
     return;
   }
   trackEvent('quiz_step_5');
+  trackEvent('quiz_contact_shown');
   document.querySelectorAll('.quiz-step').forEach(s => s.classList.remove('active'));
   document.getElementById('quiz-header').style.display = 'none';
   document.getElementById('contact-step').classList.add('active');
